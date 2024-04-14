@@ -5,10 +5,12 @@ import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import androidx.room.Room
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.network.HHApiService
 import ru.practicum.android.diploma.data.network.NetworkClient
@@ -33,10 +35,25 @@ val dataModule = module {
     }
 
     single<HHApiService> {
+        val httpClient = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                chain.run {
+                    proceed(
+                        request()
+                            .newBuilder()
+                            .addHeader("Authorization", "Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
+                            .addHeader("HH-User-Agent", "Find Your Job/1.0 (goaltenders@yandex.ru)")
+                            .build()
+                    )
+                }
+            }
+            .build()
+
         Retrofit
             .Builder()
             .baseUrl("https://api.hh.ru/")
             .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
             .build()
             .create(HHApiService::class.java)
     }

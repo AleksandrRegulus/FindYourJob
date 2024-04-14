@@ -11,7 +11,6 @@ import java.util.Properties
  *
  * Плагин дает возможность получить к ним типизированный доступ в build.gradle.kts
  */
-@Suppress("detekt.UnnecessaryAbstractClass")
 abstract class DevelopPropertiesPluginExtension {
     var hhAccessToken = ""
 }
