@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.presentation.vacancy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,6 +12,7 @@ import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.domain.share.SharingInteractor
 import ru.practicum.android.diploma.presentation.vacancy.state.VacancyFragmentScreenState
 import ru.practicum.android.diploma.util.SearchResult
+import javax.inject.Inject
 
 class VacancyViewModel(
     private val vacanciesInteractor: VacanciesInteractor,
@@ -37,6 +39,7 @@ class VacancyViewModel(
                             is SearchResult.NoInternet -> {
                                 renderVacancyFragmentScreenState(VacancyFragmentScreenState.NoInternetConnection)
                             }
+
                             is SearchResult.Success -> {
                                 renderVacancyFragmentScreenState(VacancyFragmentScreenState.Content(searchResult.data))
                                 setInitialVacancyFavoriteStatus(searchResult.data)
@@ -121,6 +124,16 @@ class VacancyViewModel(
                     )
                 }
             }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    class VacancyViewModelFactory @Inject constructor(
+        private val vacanciesInteractor: VacanciesInteractor,
+        private val sharingInteractor: SharingInteractor
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return VacancyViewModel(vacanciesInteractor, sharingInteractor) as T
         }
     }
 

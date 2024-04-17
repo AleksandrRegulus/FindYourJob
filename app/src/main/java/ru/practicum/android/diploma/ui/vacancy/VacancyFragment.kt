@@ -6,24 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.domain.models.Phone
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.presentation.vacancy.VacancyViewModel
 import ru.practicum.android.diploma.presentation.vacancy.state.VacancyFragmentScreenState
+import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.similar.SimilarVacanciesFragment
 import ru.practicum.android.diploma.util.getSalaryStringAndSymbol
+import javax.inject.Inject
 
 class VacancyFragment : BindingFragment<FragmentVacancyBinding>() {
 
-    private val viewModel by viewModel<VacancyViewModel>()
+    @Inject
+    lateinit var vmFactory: VacancyViewModel.VacancyViewModelFactory
+    private lateinit var viewModel: VacancyViewModel
+
     private var vacancyId = ""
     private var vacancyDetails: VacancyDetails? = null
     private val adapter by lazy {
@@ -43,6 +48,9 @@ class VacancyFragment : BindingFragment<FragmentVacancyBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        context?.appComponent?.inject(this)
+        viewModel = ViewModelProvider(this, vmFactory)[VacancyViewModel::class.java]
 
         viewModel.getVacancyFragmentScreenState().observe(viewLifecycleOwner) {
             render(it)

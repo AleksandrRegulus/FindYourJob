@@ -6,25 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSimilarVacanciesBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.presentation.similar.SimilarVacanciesViewModel
 import ru.practicum.android.diploma.presentation.similar.state.SimilarVacanciesFragmentState
+import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.search.VacancyAdapter
 import ru.practicum.android.diploma.ui.vacancy.VacancyFragment
 import ru.practicum.android.diploma.util.debounce
+import javax.inject.Inject
 
 class SimilarVacanciesFragment : BindingFragment<FragmentSimilarVacanciesBinding>() {
 
-    private val viewModel by viewModel<SimilarVacanciesViewModel>()
+    @Inject
+    lateinit var vmFactory: SimilarVacanciesViewModel.SimilarVacanciesViewModelFactory
+    private lateinit var viewModel: SimilarVacanciesViewModel
+
     private val adapter by lazy {
         VacancyAdapter(object : VacancyAdapter.VacancyClickListener {
             override fun onVacancyClick(vacancy: Vacancy) {
@@ -49,6 +54,9 @@ class SimilarVacanciesFragment : BindingFragment<FragmentSimilarVacanciesBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        context?.appComponent?.inject(this)
+        viewModel = ViewModelProvider(this, vmFactory)[SimilarVacanciesViewModel::class.java]
 
         viewModel.getSimilarVacancies(
             requireArguments().getString(ARGS_SIMILAR_VACANCY_ID).toString()

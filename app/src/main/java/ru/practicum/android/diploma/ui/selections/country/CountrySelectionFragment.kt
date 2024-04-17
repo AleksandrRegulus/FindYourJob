@@ -8,23 +8,27 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentCountrySelectionBinding
 import ru.practicum.android.diploma.domain.models.Country
 import ru.practicum.android.diploma.presentation.selections.country.CountrySelectionViewModel
 import ru.practicum.android.diploma.presentation.selections.country.state.CountrySelectionState
+import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.selections.area.AreaSelectionFragment
 import ru.practicum.android.diploma.ui.selections.country.adapter.CountryAdapter
 import ru.practicum.android.diploma.util.debounce
+import javax.inject.Inject
 
 class CountrySelectionFragment : BindingFragment<FragmentCountrySelectionBinding>() {
 
-    private val viewModel by viewModel<CountrySelectionViewModel>()
+    @Inject
+    lateinit var vmFactory: CountrySelectionViewModel.CountrySelectionViewModelFactory
+    private lateinit var viewModel: CountrySelectionViewModel
 
     private val countryAdapter by lazy {
         val onCountryClickDebounce: (Country) -> Unit =
@@ -43,6 +47,9 @@ class CountrySelectionFragment : BindingFragment<FragmentCountrySelectionBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        context?.appComponent?.inject(this)
+        viewModel = ViewModelProvider(this, vmFactory)[CountrySelectionViewModel::class.java]
+
         initUi()
     }
 
@@ -98,47 +105,45 @@ class CountrySelectionFragment : BindingFragment<FragmentCountrySelectionBinding
             }
 
             is CountrySelectionState.Empty -> {
-                hideCountryRecyclerView()
-                hideLoader()
-                showLLErrorServer(
-                    imageResource = R.drawable.empty_favorites,
-                    titleResource = R.string.countries_are_empty
-                )
+                renderEmpty()
             }
 
             is CountrySelectionState.Error -> {
-                hideCountryRecyclerView()
-                hideLoader()
-                showLLErrorServer(
-                    imageResource = R.drawable.png_no_regions,
-                    titleResource = R.string.failed_to_retrieve_list
-                )
+                renderError()
             }
 
             is CountrySelectionState.Loading -> {
-                showLoader()
-                hideCountryRecyclerView()
-                hideLLErrorServer()
+                renderLoading()
             }
 
             is CountrySelectionState.NoInternet -> {
-                hideCountryRecyclerView()
-                hideLoader()
-                showLLErrorServer(
-                    imageResource = R.drawable.png_no_internet,
-                    titleResource = R.string.no_internet
-                )
+                renderNoInternet()
             }
         }
     }
 
-    private fun showContent(countries: List<Country>) {
-        showCountryRecyclerView()
+    private fun renderEmpty() {
+        hideCountryRecyclerView()
         hideLoader()
+        showLLErrorServer(
+            imageResource = R.drawable.empty_favorites,
+            titleResource = R.string.countries_are_empty
+        )
+    }
+
+    private fun renderLoading() {
+        showLoader()
+        hideCountryRecyclerView()
         hideLLErrorServer()
-        countryAdapter.countries.clear()
-        countryAdapter.countries.addAll(countries)
-        countryAdapter.notifyDataSetChanged()
+    }
+
+    private fun renderNoInternet() {
+        hideCountryRecyclerView()
+        hideLoader()
+        showLLErrorServer(
+            imageResource = R.drawable.png_no_internet,
+            titleResource = R.string.no_internet
+        )
     }
 
     private fun showCountryRecyclerView() {
@@ -167,8 +172,25 @@ class CountrySelectionFragment : BindingFragment<FragmentCountrySelectionBinding
         binding.progressBar.visibility = View.GONE
     }
 
+    private fun showContent(countries: List<Country>) {
+        showCountryRecyclerView()
+        hideLoader()
+        hideLLErrorServer()
+        countryAdapter.countries.clear()
+        countryAdapter.countries.addAll(countries)
+        countryAdapter.notifyDataSetChanged()
+    }
+
+    private fun renderError() {
+        hideCountryRecyclerView()
+        hideLoader()
+        showLLErrorServer(
+            imageResource = R.drawable.png_no_regions,
+            titleResource = R.string.failed_to_retrieve_list
+        )
+    }
+
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-
     }
 }

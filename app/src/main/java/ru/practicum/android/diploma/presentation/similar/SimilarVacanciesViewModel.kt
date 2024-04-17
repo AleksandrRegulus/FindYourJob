@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.presentation.similar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.isActive
@@ -13,6 +14,7 @@ import ru.practicum.android.diploma.domain.models.VacanciesRequest
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.presentation.similar.state.SimilarVacanciesFragmentState
 import ru.practicum.android.diploma.util.SearchResult
+import javax.inject.Inject
 
 class SimilarVacanciesViewModel(
     private val vacanciesInteractor: VacanciesInteractor,
@@ -106,5 +108,14 @@ class SimilarVacanciesViewModel(
 
     private fun renderState(state: SimilarVacanciesFragmentState) {
         similarVacanciesFragmentState.postValue(state)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    class SimilarVacanciesViewModelFactory @Inject constructor(
+        private val vacanciesInteractor: VacanciesInteractor,
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return SimilarVacanciesViewModel(vacanciesInteractor) as T
+        }
     }
 }

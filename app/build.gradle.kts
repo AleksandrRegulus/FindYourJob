@@ -24,6 +24,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField(type = "String", name = "HH_ACCESS_TOKEN", value = "\"${developProperties.hhAccessToken}\"")
+
     }
 
     buildTypes {
@@ -66,8 +67,8 @@ dependencies {
     implementation(libs.network.gsonConverter)
 
     // DI
-    implementation(libs.di.koinCore)
-    implementation(libs.di.koinAndroid)
+    implementation(libs.di.daggerCore)
+    implementation(libs.di.daggerCompiler)
 
     // Navigation
     implementation(libs.navigation.fragmentKtx)
