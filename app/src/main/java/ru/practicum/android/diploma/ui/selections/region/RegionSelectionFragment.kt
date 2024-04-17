@@ -8,22 +8,27 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentRegionSelectionBinding
 import ru.practicum.android.diploma.domain.models.Region
 import ru.practicum.android.diploma.presentation.selections.region.RegionSelectionViewModel
 import ru.practicum.android.diploma.presentation.selections.region.state.RegionSelectionState
+import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.selections.area.AreaSelectionFragment
 import ru.practicum.android.diploma.util.debounce
+import javax.inject.Inject
 
 class RegionSelectionFragment : BindingFragment<FragmentRegionSelectionBinding>() {
 
-    private val viewModel by viewModel<RegionSelectionViewModel>()
+    @Inject
+    lateinit var vmFactory: RegionSelectionViewModel.RegionSelectionViewModelFactory
+    private lateinit var viewModel: RegionSelectionViewModel
+
     private var selectedRegion: Region? = null
 
     private val regionAdapter by lazy {
@@ -43,6 +48,9 @@ class RegionSelectionFragment : BindingFragment<FragmentRegionSelectionBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        context?.appComponent?.inject(this)
+        viewModel = ViewModelProvider(this, vmFactory)[RegionSelectionViewModel::class.java]
 
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()

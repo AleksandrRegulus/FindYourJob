@@ -8,24 +8,28 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.presentation.search.state.SearchFragmentState
+import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.vacancy.VacancyFragment
 import ru.practicum.android.diploma.util.debounce
+import javax.inject.Inject
 
 class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
-    private val viewModel by viewModel<SearchViewModel>()
+    @Inject
+    lateinit var vmFactory: SearchViewModel.SearchViewModelFactory
+    private lateinit var viewModel: SearchViewModel
 
     private val adapter by lazy {
         VacancyAdapter(object : VacancyAdapter.VacancyClickListener {
@@ -51,6 +55,9 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        context?.appComponent?.inject(this)
+        viewModel = ViewModelProvider(this, vmFactory)[SearchViewModel::class.java]
 
         binding.InputEditText.doOnTextChanged { text, _, _, _ ->
             binding.placeHolderError.visibility = View.GONE

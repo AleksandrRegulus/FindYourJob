@@ -3,9 +3,11 @@ package ru.practicum.android.diploma.presentation.filter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import ru.practicum.android.diploma.domain.api.FilterSearchInteractor
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.presentation.filter.state.InitialState
+import javax.inject.Inject
 
 class FilterSettingsViewModel(private val filterSearchInteractor: FilterSearchInteractor) : ViewModel() {
 
@@ -85,5 +87,14 @@ class FilterSettingsViewModel(private val filterSearchInteractor: FilterSearchIn
 
     fun doNotShowWithoutSalary(value: Boolean) {
         _initialState.value = initialState.value?.copy(doNotShowWithoutSalary = value)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    class FilterSettingsViewModelFactory @Inject constructor(
+        private val filterSearchInteractor: FilterSearchInteractor,
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return FilterSettingsViewModel(filterSearchInteractor) as T
+        }
     }
 }

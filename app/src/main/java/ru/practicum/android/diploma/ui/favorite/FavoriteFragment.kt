@@ -5,23 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModel
 import ru.practicum.android.diploma.presentation.favorite.state.FavoritesState
+import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.search.VacancyAdapter
 import ru.practicum.android.diploma.ui.vacancy.VacancyFragment
 import ru.practicum.android.diploma.util.debounce
+import javax.inject.Inject
 
 class FavoriteFragment : BindingFragment<FragmentFavoriteBinding>() {
 
-    private val viewModel by viewModel<FavoriteViewModel>()
+    @Inject
+    lateinit var vmFactory: FavoriteViewModel.FavoriteViewModelFactory
+    private lateinit var viewModel: FavoriteViewModel
 
     private var adapter: VacancyAdapter? = null
 
@@ -34,6 +38,9 @@ class FavoriteFragment : BindingFragment<FragmentFavoriteBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        context?.appComponent?.inject(this)
+        viewModel = ViewModelProvider(this, vmFactory)[FavoriteViewModel::class.java]
 
         val onVacancyClickDebounce =
             debounce<Vacancy>(
@@ -69,11 +76,13 @@ class FavoriteFragment : BindingFragment<FragmentFavoriteBinding>() {
                     emptyFavoritesConstraintLayout.isVisible = false
                     errorFavoritesConstraintLayout.isVisible = false
                 }
+
                 FavoritesState.Empty -> {
                     favoritesRecyclerView.isVisible = false
                     emptyFavoritesConstraintLayout.isVisible = true
                     errorFavoritesConstraintLayout.isVisible = false
                 }
+
                 FavoritesState.Error -> {
                     favoritesRecyclerView.isVisible = false
                     emptyFavoritesConstraintLayout.isVisible = false

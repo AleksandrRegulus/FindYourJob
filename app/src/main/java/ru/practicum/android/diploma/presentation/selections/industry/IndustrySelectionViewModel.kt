@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.presentation.selections.industry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -11,6 +12,7 @@ import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.selections.industry.state.IndustrySelectionState
 import ru.practicum.android.diploma.util.SearchResult
+import javax.inject.Inject
 
 class IndustrySelectionViewModel(private val filterSearchInteractor: FilterSearchInteractor) : ViewModel() {
 
@@ -108,6 +110,15 @@ class IndustrySelectionViewModel(private val filterSearchInteractor: FilterSearc
             } else {
                 industriesFragmentState.postValue(IndustrySelectionState.Empty)
             }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    class IndustrySelectionViewModelFactory @Inject constructor(
+        private val filterSearchInteractor: FilterSearchInteractor,
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return IndustrySelectionViewModel(filterSearchInteractor) as T
         }
     }
 

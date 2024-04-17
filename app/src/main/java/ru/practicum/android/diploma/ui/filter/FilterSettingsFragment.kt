@@ -8,18 +8,22 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterSettingsBinding
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.presentation.filter.FilterSettingsViewModel
 import ru.practicum.android.diploma.presentation.filter.state.InitialState
+import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
+import javax.inject.Inject
 
 class FilterSettingsFragment : BindingFragment<FragmentFilterSettingsBinding>() {
 
-    private val viewModel by viewModel<FilterSettingsViewModel>()
+    @Inject
+    lateinit var vmFactory: FilterSettingsViewModel.FilterSettingsViewModelFactory
+    private lateinit var viewModel: FilterSettingsViewModel
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -30,6 +34,10 @@ class FilterSettingsFragment : BindingFragment<FragmentFilterSettingsBinding>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        context?.appComponent?.inject(this)
+        viewModel = ViewModelProvider(this, vmFactory)[FilterSettingsViewModel::class.java]
+
         setupBackButton()
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -160,7 +168,7 @@ class FilterSettingsFragment : BindingFragment<FragmentFilterSettingsBinding>() 
     private fun renderSalary(salary: String) {
         binding.inputEditText.setText(salary)
         viewModel.isSalaryChosen(value = true)
-        val statesForFloatingHint = if (salary.isNullOrBlank()) {
+        val statesForFloatingHint = if (salary.isBlank()) {
             arrayOf(
                 intArrayOf(android.R.attr.state_focused),
                 intArrayOf(-android.R.attr.state_focused),
@@ -171,7 +179,7 @@ class FilterSettingsFragment : BindingFragment<FragmentFilterSettingsBinding>() 
                 intArrayOf(-android.R.attr.state_focused),
             )
         }
-        val colorsForFloatingHint = if (salary.isNullOrBlank()) {
+        val colorsForFloatingHint = if (salary.isBlank()) {
             intArrayOf(
                 resources.getColor(R.color.blue, null),
                 resources.getColor(R.color.gray_day_white_night, null),
