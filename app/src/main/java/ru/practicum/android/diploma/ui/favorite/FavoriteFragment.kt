@@ -5,27 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavoriteBinding
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.presentation.favorite.FavoriteViewModel
 import ru.practicum.android.diploma.presentation.favorite.state.FavoritesState
-import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.search.VacancyAdapter
 import ru.practicum.android.diploma.ui.vacancy.VacancyFragment
 import ru.practicum.android.diploma.util.debounce
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class FavoriteFragment : BindingFragment<FragmentFavoriteBinding>() {
 
-    @Inject
-    lateinit var vmFactory: FavoriteViewModel.FavoriteViewModelFactory
-    private lateinit var viewModel: FavoriteViewModel
+    private val viewModel: FavoriteViewModel by viewModels()
 
     private var adapter: VacancyAdapter? = null
 
@@ -38,9 +36,6 @@ class FavoriteFragment : BindingFragment<FragmentFavoriteBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        context?.appComponent?.inject(this)
-        viewModel = ViewModelProvider(this, vmFactory)[FavoriteViewModel::class.java]
 
         val onVacancyClickDebounce =
             debounce<Vacancy>(

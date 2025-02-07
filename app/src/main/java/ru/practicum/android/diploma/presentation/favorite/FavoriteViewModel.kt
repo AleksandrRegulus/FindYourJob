@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.presentation.favorite
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onEach
@@ -13,7 +13,10 @@ import ru.practicum.android.diploma.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.presentation.favorite.state.FavoritesState
 import javax.inject.Inject
 
-class FavoriteViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
+    private val vacanciesInteractor: VacanciesInteractor
+) : ViewModel() {
 
     private val _favoritesStateLiveData = MutableLiveData<FavoritesState>()
     val favoritesStateLiveData: LiveData<FavoritesState> get() = _favoritesStateLiveData
@@ -34,15 +37,6 @@ class FavoriteViewModel(private val vacanciesInteractor: VacanciesInteractor) : 
                 }
                 .catch { _favoritesStateLiveData.postValue(FavoritesState.Error) }
                 .collect { }
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class FavoriteViewModelFactory @Inject constructor(
-        private val vacanciesInteractor: VacanciesInteractor,
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return FavoriteViewModel(vacanciesInteractor) as T
         }
     }
 

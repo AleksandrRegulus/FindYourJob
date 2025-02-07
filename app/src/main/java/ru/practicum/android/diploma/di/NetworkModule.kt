@@ -4,6 +4,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,7 +17,8 @@ import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import javax.inject.Singleton
 
 @Module
-class NetworkModule() {
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 
     @Singleton
     @Provides
@@ -44,7 +48,7 @@ class NetworkModule() {
 
     @Singleton
     @Provides
-    fun privideConnectivityManager(context: Context): ConnectivityManager {
+    fun privideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
         return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 

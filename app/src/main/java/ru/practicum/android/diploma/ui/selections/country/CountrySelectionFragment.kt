@@ -8,27 +8,25 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.setFragmentResult
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentCountrySelectionBinding
 import ru.practicum.android.diploma.domain.models.Country
 import ru.practicum.android.diploma.presentation.selections.country.CountrySelectionViewModel
 import ru.practicum.android.diploma.presentation.selections.country.state.CountrySelectionState
-import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.selections.area.AreaSelectionFragment
 import ru.practicum.android.diploma.ui.selections.country.adapter.CountryAdapter
 import ru.practicum.android.diploma.util.debounce
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class CountrySelectionFragment : BindingFragment<FragmentCountrySelectionBinding>() {
 
-    @Inject
-    lateinit var vmFactory: CountrySelectionViewModel.CountrySelectionViewModelFactory
-    private lateinit var viewModel: CountrySelectionViewModel
+    private val viewModel: CountrySelectionViewModel by viewModels()
 
     private val countryAdapter by lazy {
         val onCountryClickDebounce: (Country) -> Unit =
@@ -47,9 +45,6 @@ class CountrySelectionFragment : BindingFragment<FragmentCountrySelectionBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context?.appComponent?.inject(this)
-        viewModel = ViewModelProvider(this, vmFactory)[CountrySelectionViewModel::class.java]
-
         initUi()
     }
 

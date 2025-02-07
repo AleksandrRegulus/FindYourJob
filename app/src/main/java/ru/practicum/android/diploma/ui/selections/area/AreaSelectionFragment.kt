@@ -8,22 +8,20 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentAreaSelectionBinding
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.presentation.selections.area.AreaSelectionViewModel
-import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
 import ru.practicum.android.diploma.ui.selections.region.RegionSelectionFragment
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class AreaSelectionFragment : BindingFragment<FragmentAreaSelectionBinding>() {
 
-    @Inject
-    lateinit var vmFactory: AreaSelectionViewModel.AreaSelectionViewModelFactory
-    private lateinit var viewModel: AreaSelectionViewModel
+    private val viewModel: AreaSelectionViewModel by viewModels()
 
     private var currentCountryId: String = ""
 
@@ -36,9 +34,6 @@ class AreaSelectionFragment : BindingFragment<FragmentAreaSelectionBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        context?.appComponent?.inject(this)
-        viewModel = ViewModelProvider(this, vmFactory)[AreaSelectionViewModel::class.java]
 
         setupBackButton()
 

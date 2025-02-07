@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.presentation.similar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -16,7 +16,8 @@ import ru.practicum.android.diploma.presentation.similar.state.SimilarVacanciesF
 import ru.practicum.android.diploma.util.SearchResult
 import javax.inject.Inject
 
-class SimilarVacanciesViewModel(
+@HiltViewModel
+class SimilarVacanciesViewModel @Inject constructor(
     private val vacanciesInteractor: VacanciesInteractor,
 ) : ViewModel() {
 
@@ -110,12 +111,4 @@ class SimilarVacanciesViewModel(
         similarVacanciesFragmentState.postValue(state)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class SimilarVacanciesViewModelFactory @Inject constructor(
-        private val vacanciesInteractor: VacanciesInteractor,
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return SimilarVacanciesViewModel(vacanciesInteractor) as T
-        }
-    }
 }
