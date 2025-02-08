@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -34,11 +35,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -67,8 +68,8 @@ dependencies {
     implementation(libs.network.gsonConverter)
 
     // DI
-    implementation(libs.di.daggerCore)
-    implementation(libs.di.daggerCompiler)
+    implementation(libs.di.hiltAndroid)
+    kapt(libs.di.hiltAndroidCompiler)
 
     // Navigation
     implementation(libs.navigation.fragmentKtx)
@@ -86,4 +87,8 @@ dependencies {
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
+}
+
+kapt {
+    correctErrorTypes = true
 }

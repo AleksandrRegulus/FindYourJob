@@ -3,12 +3,15 @@ package ru.practicum.android.diploma.presentation.selections.area
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.practicum.android.diploma.domain.api.FilterSearchInteractor
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import javax.inject.Inject
 
-class AreaSelectionViewModel(private val filterSearchInteractor: FilterSearchInteractor) : ViewModel() {
+@HiltViewModel
+class AreaSelectionViewModel @Inject constructor(
+    private val filterSearchInteractor: FilterSearchInteractor
+) : ViewModel() {
 
     private var currentFilterParameters: FilterParameters? = null
     private val _selectionAreaState = MutableLiveData<FilterParameters?>()
@@ -49,12 +52,4 @@ class AreaSelectionViewModel(private val filterSearchInteractor: FilterSearchInt
         currentFilterParameters?.let { filterSearchInteractor.saveFilterParameters(it) }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class AreaSelectionViewModelFactory @Inject constructor(
-        private val filterSearchInteractor: FilterSearchInteractor,
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return AreaSelectionViewModel(filterSearchInteractor) as T
-        }
-    }
 }

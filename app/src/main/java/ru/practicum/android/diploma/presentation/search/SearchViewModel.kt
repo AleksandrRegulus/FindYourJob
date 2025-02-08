@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.presentation.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.isActive
@@ -20,7 +20,8 @@ import ru.practicum.android.diploma.util.SearchResult
 import ru.practicum.android.diploma.util.debounce
 import javax.inject.Inject
 
-class SearchViewModel(
+@HiltViewModel
+class SearchViewModel @Inject constructor(
     private val vacanciesInteractor: VacanciesInteractor,
     private val filterSearchInteractor: FilterSearchInteractor
 ) : ViewModel() {
@@ -168,16 +169,6 @@ class SearchViewModel(
 
     fun getFilterParameters() {
         _filterParameters.value = filterSearchInteractor.getFilterParameters()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class SearchViewModelFactory @Inject constructor(
-        private val vacanciesInteractor: VacanciesInteractor,
-        private val filterSearchInteractor: FilterSearchInteractor
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return SearchViewModel(vacanciesInteractor, filterSearchInteractor) as T
-        }
     }
 
     companion object {

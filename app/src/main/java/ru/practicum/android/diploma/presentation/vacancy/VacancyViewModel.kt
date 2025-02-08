@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.presentation.vacancy
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
@@ -14,7 +14,8 @@ import ru.practicum.android.diploma.presentation.vacancy.state.VacancyFragmentSc
 import ru.practicum.android.diploma.util.SearchResult
 import javax.inject.Inject
 
-class VacancyViewModel(
+@HiltViewModel
+class VacancyViewModel @Inject constructor(
     private val vacanciesInteractor: VacanciesInteractor,
     private val sharingInteractor: SharingInteractor
 ) : ViewModel() {
@@ -124,16 +125,6 @@ class VacancyViewModel(
                     )
                 }
             }
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class VacancyViewModelFactory @Inject constructor(
-        private val vacanciesInteractor: VacanciesInteractor,
-        private val sharingInteractor: SharingInteractor
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return VacancyViewModel(vacanciesInteractor, sharingInteractor) as T
         }
     }
 

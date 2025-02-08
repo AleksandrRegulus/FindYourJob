@@ -2,6 +2,8 @@ package ru.practicum.android.diploma.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import ru.practicum.android.diploma.domain.api.FilterSearchInteractor
 import ru.practicum.android.diploma.domain.api.FilterSearchRepository
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
@@ -13,7 +15,8 @@ import ru.practicum.android.diploma.domain.share.SharingInteractor
 import ru.practicum.android.diploma.domain.share.impl.SharingInteractorImpl
 
 @Module
-class DomainModule {
+@InstallIn(SingletonComponent::class)
+object DomainModule {
 
     @Provides
     fun provideVacanciesInteractor(vacanciesRepository: VacanciesRepository): VacanciesInteractor {

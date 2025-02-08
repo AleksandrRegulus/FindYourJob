@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.presentation.selections.region
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -14,7 +14,8 @@ import ru.practicum.android.diploma.presentation.selections.region.state.RegionS
 import ru.practicum.android.diploma.util.SearchResult
 import javax.inject.Inject
 
-class RegionSelectionViewModel(
+@HiltViewModel
+class RegionSelectionViewModel @Inject constructor(
     private val filterSearchInteractor: FilterSearchInteractor
 ) : ViewModel() {
 
@@ -103,12 +104,4 @@ class RegionSelectionViewModel(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class RegionSelectionViewModelFactory @Inject constructor(
-        private val filterSearchInteractor: FilterSearchInteractor,
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return RegionSelectionViewModel(filterSearchInteractor) as T
-        }
-    }
 }

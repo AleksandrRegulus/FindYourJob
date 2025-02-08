@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.presentation.selections.country
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.FilterSearchInteractor
@@ -12,7 +12,10 @@ import ru.practicum.android.diploma.presentation.selections.country.state.Countr
 import ru.practicum.android.diploma.util.SearchResult
 import javax.inject.Inject
 
-class CountrySelectionViewModel(private val filterSearchInteractor: FilterSearchInteractor) : ViewModel() {
+@HiltViewModel
+class CountrySelectionViewModel @Inject constructor(
+    private val filterSearchInteractor: FilterSearchInteractor
+) : ViewModel() {
 
     private val countrySelectionState = MutableLiveData<CountrySelectionState>()
 
@@ -52,12 +55,4 @@ class CountrySelectionViewModel(private val filterSearchInteractor: FilterSearch
         countrySelectionState.postValue(state)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class CountrySelectionViewModelFactory @Inject constructor(
-        private val filterSearchInteractor: FilterSearchInteractor,
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return CountrySelectionViewModel(filterSearchInteractor) as T
-        }
-    }
 }

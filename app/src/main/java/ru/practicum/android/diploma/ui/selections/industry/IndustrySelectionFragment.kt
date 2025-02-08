@@ -6,23 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentIndustrySelectionBinding
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.presentation.selections.industry.IndustrySelectionViewModel
 import ru.practicum.android.diploma.presentation.selections.industry.state.IndustrySelectionState
-import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class IndustrySelectionFragment : BindingFragment<FragmentIndustrySelectionBinding>() {
 
-    @Inject
-    lateinit var vmFactory: IndustrySelectionViewModel.IndustrySelectionViewModelFactory
-    private lateinit var viewModel: IndustrySelectionViewModel
+    private val viewModel: IndustrySelectionViewModel by viewModels()
 
     private val adapter = IndustryAdapter(
         object : IndustryAdapter.IndustryClickListener {
@@ -41,9 +39,6 @@ class IndustrySelectionFragment : BindingFragment<FragmentIndustrySelectionBindi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        context?.appComponent?.inject(this)
-        viewModel = ViewModelProvider(this, vmFactory)[IndustrySelectionViewModel::class.java]
 
         binding.btnBack.setOnClickListener {
             findNavController().navigateUp()

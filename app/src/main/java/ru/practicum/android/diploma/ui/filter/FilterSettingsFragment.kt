@@ -8,22 +8,20 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterSettingsBinding
 import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.presentation.filter.FilterSettingsViewModel
 import ru.practicum.android.diploma.presentation.filter.state.InitialState
-import ru.practicum.android.diploma.ui.appComponent
 import ru.practicum.android.diploma.ui.fragment.BindingFragment
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class FilterSettingsFragment : BindingFragment<FragmentFilterSettingsBinding>() {
 
-    @Inject
-    lateinit var vmFactory: FilterSettingsViewModel.FilterSettingsViewModelFactory
-    private lateinit var viewModel: FilterSettingsViewModel
+    private val viewModel: FilterSettingsViewModel by viewModels()
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -34,9 +32,6 @@ class FilterSettingsFragment : BindingFragment<FragmentFilterSettingsBinding>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        context?.appComponent?.inject(this)
-        viewModel = ViewModelProvider(this, vmFactory)[FilterSettingsViewModel::class.java]
 
         setupBackButton()
         binding.backButton.setOnClickListener {
