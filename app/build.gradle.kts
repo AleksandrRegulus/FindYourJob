@@ -68,15 +68,8 @@ dependencies {
     implementation(libs.network.gsonConverter)
 
     // DI
-//    implementation(libs.di.daggerCore)
-//    implementation(libs.di.daggerCompiler)
-
-
     implementation(libs.di.hiltAndroid)
     kapt(libs.di.hiltAndroidCompiler)
-    // DI hilt support ViewModel
-//    implementation(libs.di.hiltLifecycleViewmodel)
-//    kapt(libs.di.hiltCompiler)
 
     // Navigation
     implementation(libs.navigation.fragmentKtx)
