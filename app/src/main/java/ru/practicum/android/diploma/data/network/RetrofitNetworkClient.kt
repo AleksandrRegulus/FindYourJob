@@ -11,8 +11,9 @@ import ru.practicum.android.diploma.data.dto.Response
 import ru.practicum.android.diploma.data.dto.ResponseAreasDto
 import ru.practicum.android.diploma.data.dto.ResponseCountriesDto
 import ru.practicum.android.diploma.data.dto.ResponseIndustriesDto
+import javax.inject.Inject
 
-class RetrofitNetworkClient(
+class RetrofitNetworkClient @Inject constructor(
     private val hhApiService: HHApiService,
     private val connectivityManager: ConnectivityManager,
 ) : NetworkClient {

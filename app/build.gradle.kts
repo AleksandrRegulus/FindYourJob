@@ -1,15 +1,20 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.android)
     id("ru.practicum.android.diploma.plugins.developproperties")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     namespace = "ru.practicum.android.diploma"
@@ -63,6 +68,12 @@ dependencies {
     implementation(libs.ui.constraintLayout)
     implementation(libs.ui.glide)
 
+    // Compose
+    implementation(libs.bundles.compose)
+
+    implementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.androidx.ui.tooling)
+
     // Network
     implementation(libs.network.retrofit)
     implementation(libs.network.gsonConverter)
@@ -70,6 +81,7 @@ dependencies {
     // DI
     implementation(libs.di.hiltAndroid)
     kapt(libs.di.hiltAndroidCompiler)
+    implementation(libs.hilt.navigation.compose)
 
     // Navigation
     implementation(libs.navigation.fragmentKtx)

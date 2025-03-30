@@ -1,36 +1,26 @@
 package ru.practicum.android.diploma.di
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
 import ru.practicum.android.diploma.domain.api.FilterSearchInteractor
-import ru.practicum.android.diploma.domain.api.FilterSearchRepository
 import ru.practicum.android.diploma.domain.api.VacanciesInteractor
-import ru.practicum.android.diploma.domain.api.VacanciesRepository
 import ru.practicum.android.diploma.domain.impl.FilterSearchInteractorImpl
 import ru.practicum.android.diploma.domain.impl.VacanciesInteractorImpl
-import ru.practicum.android.diploma.domain.share.ExternalNavigator
 import ru.practicum.android.diploma.domain.share.SharingInteractor
 import ru.practicum.android.diploma.domain.share.impl.SharingInteractorImpl
 
 @Module
-@InstallIn(SingletonComponent::class)
-object DomainModule {
+@InstallIn(ViewModelComponent::class)
+interface DomainModule {
 
-    @Provides
-    fun provideVacanciesInteractor(vacanciesRepository: VacanciesRepository): VacanciesInteractor {
-        return VacanciesInteractorImpl(vacanciesRepository)
-    }
+    @Binds
+    fun bindVacanciesInteractor(impl: VacanciesInteractorImpl): VacanciesInteractor
 
-    @Provides
-    fun provideSharingInteractor(externalNavigator: ExternalNavigator): SharingInteractor {
-        return SharingInteractorImpl(externalNavigator)
-    }
+    @Binds
+    fun bindSharingInteractor(impl: SharingInteractorImpl): SharingInteractor
 
-    @Provides
-    fun provideFilterSearchInteractor(filterSearchRepository: FilterSearchRepository): FilterSearchInteractor {
-        return FilterSearchInteractorImpl(filterSearchRepository)
-    }
-
+    @Binds
+    fun bindFilterSearchInteractor(impl: FilterSearchInteractorImpl): FilterSearchInteractor
 }

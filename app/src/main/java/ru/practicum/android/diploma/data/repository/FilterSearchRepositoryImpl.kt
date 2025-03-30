@@ -17,8 +17,9 @@ import ru.practicum.android.diploma.domain.models.FilterParameters
 import ru.practicum.android.diploma.domain.models.Industry
 import ru.practicum.android.diploma.domain.models.Region
 import ru.practicum.android.diploma.util.SearchResult
+import javax.inject.Inject
 
-class FilterSearchRepositoryImpl(
+class FilterSearchRepositoryImpl @Inject constructor(
     private val networkClient: NetworkClient,
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson

@@ -15,8 +15,9 @@ import ru.practicum.android.diploma.domain.models.VacanciesRequest
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.util.SearchResult
+import javax.inject.Inject
 
-class VacanciesRepositoryImpl(
+class VacanciesRepositoryImpl @Inject constructor(
     private val networkClient: NetworkClient,
     private val appDatabase: AppDatabase
 ) : VacanciesRepository {

@@ -8,8 +8,11 @@ import ru.practicum.android.diploma.domain.models.VacanciesRequest
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.domain.models.VacancyDetails
 import ru.practicum.android.diploma.util.SearchResult
+import javax.inject.Inject
 
-class VacanciesInteractorImpl(private val vacanciesRepository: VacanciesRepository) : VacanciesInteractor {
+class VacanciesInteractorImpl @Inject constructor(
+    private val vacanciesRepository: VacanciesRepository
+) : VacanciesInteractor {
 
     override fun searchVacancies(vacanciesRequest: VacanciesRequest): Flow<SearchResult<Vacancies>> {
         return vacanciesRepository.searchVacancies(vacanciesRequest = vacanciesRequest)
