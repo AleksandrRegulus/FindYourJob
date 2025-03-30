@@ -9,13 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.core.view.isVisible
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.databinding.ActivityRootBinding
 import ru.practicum.android.diploma.ui.navigation.BottomBar
 import ru.practicum.android.diploma.ui.navigation.NavGraph
 import ru.practicum.android.diploma.ui.theme.ComposeTheme
@@ -26,7 +22,6 @@ class RootActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        startXmlProject()
 
         setContent { // Jetpack Compose
             ComposeTheme {
@@ -51,32 +46,6 @@ class RootActivity : AppCompatActivity() {
                     ) {
                         NavGraph(navHostController = navController)
                     }
-                }
-            }
-        }
-    }
-
-    private fun startXmlProject() {
-        val binding = ActivityRootBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        binding.bottomNavigationView.setupWithNavController(navController)
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.searchFragment,
-                R.id.favoriteFragment,
-                R.id.aboutFragment -> {
-                    binding.divider.isVisible = true
-                    binding.bottomNavigationView.isVisible = true
-                }
-
-                else -> {
-                    binding.divider.isVisible = false
-                    binding.bottomNavigationView.isVisible = false
                 }
             }
         }

@@ -33,10 +33,22 @@ android {
 
     }
 
+    flavorDimensions += "pattern"
+    productFlavors {
+        create("xml") {
+            dimension = "pattern"
+        }
+        create("compose") {
+            isDefault = true
+            dimension = "pattern"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

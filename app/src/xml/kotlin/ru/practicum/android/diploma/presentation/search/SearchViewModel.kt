@@ -6,11 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.api.FilterSearchInteractor
@@ -42,12 +38,8 @@ class SearchViewModel @Inject constructor(
     private val searchDebounce = debounce<VacanciesRequest>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) {
         makeRequest(it)
     }
-    private val oldSearchFragmentScreenState = MutableLiveData<SearchFragmentState>(SearchFragmentState.Start)
-    fun getSearchFragmentScreenState(): LiveData<SearchFragmentState> = oldSearchFragmentScreenState
-
-    private val _searchFragmentScreenState = MutableStateFlow<SearchFragmentState>(SearchFragmentState.Start)
-    val searchFragmentScreenState: StateFlow<SearchFragmentState> = _searchFragmentScreenState.asStateFlow()
-
+    private val searchFragmentScreenState = MutableLiveData<SearchFragmentState>(SearchFragmentState.Start)
+    fun getSearchFragmentScreenState(): LiveData<SearchFragmentState> = searchFragmentScreenState
 
     private val _filterParameters = MutableLiveData<FilterParameters?>()
     val filterParameters: LiveData<FilterParameters?> = _filterParameters
@@ -173,8 +165,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun renderState(state: SearchFragmentState) {
-//        oldSearchFragmentScreenState.value = state
-        _searchFragmentScreenState.update { state }
+        searchFragmentScreenState.value = state
     }
 
     fun getFilterParameters() {
