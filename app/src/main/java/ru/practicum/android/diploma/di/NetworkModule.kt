@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.di
 
 import android.content.Context
 import android.net.ConnectivityManager
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,43 +19,44 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+interface NetworkModule {
 
-    @Singleton
-    @Provides
-    fun provideHHApiService(): HHApiService {
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                chain.run {
-                    proceed(
-                        request()
-                            .newBuilder()
-                            .addHeader("Authorization", "Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
-                            .addHeader("HH-User-Agent", "Find Your Job/1.0 (goaltenders@yandex.ru)")
-                            .build()
-                    )
+    @Binds
+    fun bindNetworkClient(impl: RetrofitNetworkClient): NetworkClient
+
+    companion object {
+
+        @Singleton
+        @Provides
+        fun provideHHApiService(): HHApiService {
+            val httpClient = OkHttpClient.Builder()
+                .addInterceptor { chain ->
+                    chain.run {
+                        proceed(
+                            request()
+                                .newBuilder()
+                                .addHeader("Authorization", "Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
+                                .addHeader("HH-User-Agent", "Find Your Job/1.0 (goaltenders@yandex.ru)")
+                                .build()
+                        )
+                    }
                 }
-            }
-            .build()
+                .build()
 
-        return Retrofit
-            .Builder()
-            .baseUrl("https://api.hh.ru/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(httpClient)
-            .build()
-            .create(HHApiService::class.java)
+            return Retrofit
+                .Builder()
+                .baseUrl("https://api.hh.ru/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
+                .build()
+                .create(HHApiService::class.java)
+        }
+
+        @Singleton
+        @Provides
+        fun privideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
+            return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        }
     }
 
-    @Singleton
-    @Provides
-    fun privideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
-        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    }
-
-    @Singleton
-    @Provides
-    fun provideNetworkClient(hhApiService: HHApiService, connectivityManager: ConnectivityManager): NetworkClient {
-        return RetrofitNetworkClient(hhApiService, connectivityManager)
-    }
 }
