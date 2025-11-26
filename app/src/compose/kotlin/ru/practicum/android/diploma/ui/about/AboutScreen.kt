@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -17,8 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.ui.theme.ComposeTheme
 import ru.practicum.android.diploma.ui.theme.medium16
-import ru.practicum.android.diploma.ui.theme.medium22
 import ru.practicum.android.diploma.ui.theme.mediumBold32
+import ru.practicum.android.diploma.ui.utils.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,16 +30,7 @@ fun AboutScreen() {
     )
 
     Column {
-        TopAppBar(
-            expandedHeight = dimensionResource(R.dimen._64dp),
-            title = {
-                Text(
-                    text = stringResource(R.string.team),
-                    style = MaterialTheme.typography.medium22
-                )
-            },
-        )
-
+        TopBar(text = stringResource(R.string.team))
         Column(
             Modifier
                 .fillMaxSize()

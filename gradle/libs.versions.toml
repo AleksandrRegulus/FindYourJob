@@ -2,12 +2,14 @@
 agp = "8.7.3"
 kotlin = "2.0.20"
 java = "VERSION_17"
-hilt = "2.55"
 
 # Build constants
 minSdk = "26"
 compileSdk = "34"
 targetSdk = "33"
+
+#db
+roomVersion = "2.7.0"
 
 # Detekt
 detekt = "1.23.3"
@@ -17,9 +19,21 @@ detektTwitterComposeRules = "0.0.26"
 activityCompose = "1.9.2"
 composeBom = "2025.01.01"
 composeNavigation = "2.8.6"
+coilCompose = "2.5.0"
+paging = "3.3.6"
 
 # navigation
 hiltNavigation = "1.2.0"
+
+# di
+hilt = "2.55"
+hiltCompose = "1.2.0"
+
+# DataStore
+dataStore = "1.1.7"
+serialization = "1.7.3"
+protobuf = "0.9.4"
+protobufLite = "3.25.1"
 
 [libraries]
 
@@ -36,12 +50,19 @@ staticAnalysis-detektTwitterComposeRules = { module = "com.twitter.compose.rules
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 androidx-material = { group = "androidx.compose.material", name = "material" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+
+# paging
+androidx-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomVersion" }
 # debug
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
@@ -55,24 +76,29 @@ ui-material = "com.google.android.material:material:1.10.0"
 ui-constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 ui-glide = "com.github.bumptech.glide:glide:4.15.1"
 
+# DataStore
+androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+google-protobuf-lite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobufLite" }
+google-protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobufLite" }
+
 # Network
 network-retrofit = "com.squareup.retrofit2:retrofit:2.9.0"
 network-gsonConverter = "com.squareup.retrofit2:converter-gson:2.9.0"
 
 # DI
-di-hiltAndroid = "com.google.dagger:hilt-android:2.55"
-di-hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:2.55"
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompose" }
 
 # Navigation
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
-
 navigation-fragmentKtx = "androidx.navigation:navigation-fragment-ktx:2.7.7"
 navigation-uiKtx = "androidx.navigation:navigation-ui-ktx:2.7.7"
 
 # Room
-database-roomRuntime = "androidx.room:room-runtime:2.6.1"
-database-roomKtx = "androidx.room:room-ktx:2.6.1"
-database-roomCompiler = "androidx.room:room-compiler:2.6.1"
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
+room-kapt = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
 
 # Unit tests
 unitTests-junit = "junit:junit:4.13.2"
@@ -95,5 +121,7 @@ compose = [
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-kapt = { id = "kotlin-kapt" }

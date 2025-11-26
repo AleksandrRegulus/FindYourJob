@@ -19,12 +19,13 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = White,  //text topbar
     onSurfaceVariant = White,  // placeholder text field
     surfaceContainerHighest = Gray,  // back text field
+    primary = Blue,          // CircularProgressIndicator
+    onPrimary = Black,     // цвет галки на чекбоксе
 
 
-    primary = Color.Red,
     secondary = Color.Red,
     tertiary = Color.Red,
-    onPrimary = Color.Red,
+
     onSecondary = Color.Red,
     onTertiary = Color.Red,
     primaryContainer = Color.Red,
@@ -63,9 +64,10 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Black,
     onSurfaceVariant = Gray,
     surfaceContainerHighest = LightGray,
+    primary = Blue,
+    onPrimary = White,
 
 
-    primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
 

@@ -2,8 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.google.protobuf)
     id("ru.practicum.android.diploma.plugins.developproperties")
 }
 
@@ -68,9 +70,6 @@ dependencies {
     // Annotation processors
     annotationProcessor(libs.ui.glide)
 
-    // Kotlin annotation processing
-    kapt(libs.database.roomCompiler)
-
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
     implementation(libs.androidX.fragmetnKtx)
@@ -82,26 +81,38 @@ dependencies {
 
     // Compose
     implementation(libs.bundles.compose)
-
+    implementation(libs.coil.compose)
     implementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
+
+    //paging
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.room.paging)
+
+    //datastore
+    implementation(libs.androidx.datastore)
+    implementation(libs.google.protobuf.lite)
+    implementation(libs.google.protobuf.kotlin.lite)
+    implementation(libs.kotlinx.serialization)
 
     // Network
     implementation(libs.network.retrofit)
     implementation(libs.network.gsonConverter)
 
     // DI
-    implementation(libs.di.hiltAndroid)
-    kapt(libs.di.hiltAndroidCompiler)
+    implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
+    kapt(libs.hilt.compiler)
 
     // Navigation
     implementation(libs.navigation.fragmentKtx)
     implementation(libs.navigation.uiKtx)
 
     // Database
-    implementation(libs.database.roomRuntime)
-    implementation(libs.database.roomKtx)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.room.kapt)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
@@ -110,7 +121,27 @@ dependencies {
     // region UI tests
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
+//    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
     // endregion
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }
 
 kapt {

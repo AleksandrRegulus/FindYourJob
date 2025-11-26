@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "ru.practicum.android.diploma.datastore";
+option java_multiple_files = true;
+
+message FilterParametersProto {
+    string idIndustry = 1;
+    string nameIndustry = 2;
+    string idCountry = 3;
+    string nameCountry = 4;
+    string idRegion = 5;
+    string nameRegion = 6;
+    string salary = 7;
+    bool doNotShowWithoutSalary = 8;
+}
